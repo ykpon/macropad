@@ -1,0 +1,16 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            display-name = "Bench test";
+            // D2=A, D3=B, D4=C, D5=EC11 push (Play/Pause)
+            bindings = <&kp A &kp B &kp C &kp C_PP>;
+            // EC11 rotation: clockwise volume up, anticlockwise down.
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+        };
+    };
+};

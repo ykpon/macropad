@@ -1,0 +1,4 @@
+include:
+  - board: nice_nano_v2
+    shield: tiny_macropad
+    artifact-name: macropad-3keys-ec11

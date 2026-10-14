@@ -1,0 +1,6 @@
+if SHIELD_TINY_MACROPAD
+
+config ZMK_KEYBOARD_NAME
+    default "Mini Macro EC11"
+
+endif

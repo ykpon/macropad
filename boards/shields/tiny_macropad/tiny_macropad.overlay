@@ -1,0 +1,50 @@
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/zmk/matrix_transform.h>
+
+/ {
+    // Test layout: 3 independent switches and the EC11 push switch.
+    // One leg of every button goes to GND.
+    kscan0: kscan_0 {
+        compatible = "zmk,kscan-gpio-direct";
+        wakeup-source;
+        input-gpios =
+            <&pro_micro 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
+            <&pro_micro 3 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
+            <&pro_micro 4 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
+            <&pro_micro 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+    };
+
+    default_transform: keymap_transform_0 {
+        compatible = "zmk,matrix-transform";
+        columns = <4>;
+        rows = <1>;
+        map = <RC(0,0) RC(0,1) RC(0,2) RC(0,3)>;
+    };
+
+    physical_layout0: physical_layout_0 {
+        compatible = "zmk,physical-layout";
+        display-name = "3 keys + encoder push";
+        kscan = <&kscan0>;
+        transform = <&default_transform>;
+    };
+
+    // EC11 3-pin rotary section: left A / centre C=GND / right B.
+    // Direction may be reversed depending on physical orientation.
+    encoder0: encoder_0 {
+        compatible = "alps,ec11";
+        a-gpios = <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
+        b-gpios = <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
+        steps = <20>;
+        status = "okay";
+    };
+
+    sensors: sensors {
+        compatible = "zmk,keymap-sensors";
+        sensors = <&encoder0>;
+        triggers-per-rotation = <20>;
+    };
+
+    chosen {
+        zmk,physical-layout = &physical_layout0;
+    };
+};
