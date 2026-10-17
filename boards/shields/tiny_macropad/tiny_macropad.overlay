@@ -2,38 +2,44 @@
 #include <dt-bindings/zmk/matrix_transform.h>
 
 / {
-    // Test layout: 3 independent switches and the EC11 push switch.
-    // One leg of every button goes to GND.
+    // NOTE: broken GPIO P0.17 / silkscreen "017" is NOT used anywhere.
+    // Each normally-open switch shorts its assigned GPIO to GND when pressed.
     kscan0: kscan_0 {
         compatible = "zmk,kscan-gpio-direct";
         wakeup-source;
         input-gpios =
-            <&pro_micro 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
-            <&pro_micro 3 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
-            <&pro_micro 4 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,
-            <&pro_micro 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+            <&pro_micro 3 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,   // P0.20 / 020: key 1
+            <&pro_micro 4 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,   // P0.22 / 022: key 2
+            <&pro_micro 8 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,   // P1.04 / 104: key 3
+            <&pro_micro 9 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,   // P1.06 / 106: key 4
+            <&pro_micro 21 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,  // P0.31 / 031: key 5
+            <&pro_micro 20 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>,  // P0.29 / 029: key 6
+            <&pro_micro 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;   // P0.24 / 024: EC11 push
     };
 
     default_transform: keymap_transform_0 {
         compatible = "zmk,matrix-transform";
-        columns = <4>;
+        columns = <7>;
         rows = <1>;
-        map = <RC(0,0) RC(0,1) RC(0,2) RC(0,3)>;
+        map = <
+            RC(0,0) RC(0,1) RC(0,2)
+            RC(0,3) RC(0,4) RC(0,5)
+            RC(0,6)
+        >;
     };
 
     physical_layout0: physical_layout_0 {
         compatible = "zmk,physical-layout";
-        display-name = "3 keys + encoder push";
+        display-name = "6 buttons + EC11 push";
         kscan = <&kscan0>;
         transform = <&default_transform>;
     };
 
-    // EC11 3-pin rotary section: left A / centre C=GND / right B.
-    // Direction may be reversed depending on physical orientation.
+    // EC11 A/C/B pins: A=100, middle C=GND, B=011.
     encoder0: encoder_0 {
         compatible = "alps,ec11";
-        a-gpios = <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
-        b-gpios = <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
+        a-gpios = <&pro_micro 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;  // P1.00 / 100
+        b-gpios = <&pro_micro 7 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;  // P0.11 / 011
         steps = <20>;
         status = "okay";
     };

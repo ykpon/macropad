@@ -6,10 +6,16 @@
         compatible = "zmk,keymap";
 
         default_layer {
-            display-name = "Bench test";
-            // D2=A, D3=B, D4=C, D5=EC11 push (Play/Pause)
-            bindings = <&kp A &kp B &kp C &kp C_PP>;
-            // EC11 rotation: clockwise volume up, anticlockwise down.
+            display-name = "Six keys";
+            // Six buttons in reading order:
+            // row 1: A B C, row 2: D E F;
+            // last binding is the built-in EC11 push switch.
+            bindings = <
+                &kp A &kp B &kp C
+                &kp D &kp E &kp F
+                &kp C_PP
+            >;
+            // Rotation: volume up / volume down.
             sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
         };
     };
